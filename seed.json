@@ -1,0 +1,15 @@
+{
+  "roommates": ["Alex", "Sam", "Jordan", "Maya"],
+  "chores": [
+    {"name": "Dishes", "frequency_days": 1, "rule": "take_turns"},
+    {"name": "Take out the bins", "frequency_days": 3, "rule": "take_turns"},
+    {"name": "Clean the bathroom", "frequency_days": 7, "rule": "least_recent"},
+    {"name": "Hoover the living room", "frequency_days": 7, "rule": "least_recent"}
+  ],
+  "supplies": [
+    {"name": "Eggs", "rule": "take_turns"},
+    {"name": "Nespresso pods", "rule": "least_spent"},
+    {"name": "Toilet paper", "rule": "take_turns"},
+    {"name": "Washing-up liquid", "rule": "least_spent"}
+  ]
+}

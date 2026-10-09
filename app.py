@@ -4,6 +4,8 @@ import os
 
 from flask import Flask
 
+from db import init_db
+
 app = Flask(__name__)
 
 
@@ -13,6 +15,8 @@ def home():
 
 
 if __name__ == "__main__":
+    # Create the tables and load seed data before the server starts.
+    init_db()
     # The port comes from the PORT environment variable (default 8000).
     port = int(os.environ.get("PORT", "8000"))
     # 0.0.0.0 means "accept connections from outside this machine",
