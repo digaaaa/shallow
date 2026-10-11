@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Whose turn is it?</h1>
+  <p>Pick what you want to check:</p>
+  <ul>
+    <li><a href="{{ url_for('chores.chores_page') }}">Chores</a>: who does what next, and what's overdue</li>
+  </ul>
+{% endblock %}

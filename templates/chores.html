@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Chores</h1>
+  <table>
+    <tr>
+      <th>Chore</th>
+      <th>Every</th>
+      <th>Last done</th>
+      <th>Status</th>
+      <th>Next up</th>
+      <th>Log it</th>
+    </tr>
+    {% for chore in chores %}
+    <tr>
+      <td>{{ chore.name }}</td>
+      <td>{{ chore.frequency_days }} day(s)</td>
+      <td>{{ chore.last_done or "never" }}</td>
+      <td>
+        {% if chore.days_overdue > 0 %}
+          <span class="overdue">{{ chore.days_overdue }} day(s) overdue</span>
+        {% else %}
+          <span class="ok">on time</span>
+        {% endif %}
+      </td>
+      <td>{{ chore.next_person }}</td>
+      <td>
+        <form method="post" action="{{ url_for('chores.mark_done', chore_id=chore.id) }}">
+          <select name="roommate_id">
+            {% for roommate in roommates %}
+              <option value="{{ roommate.id }}" {% if roommate.id == chore.next_person_id %}selected{% endif %}>
+                {{ roommate.name }}
+              </option>
+            {% endfor %}
+          </select>
+          <button type="submit">I did it</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+{% endblock %}

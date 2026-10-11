@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>YourTurn</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 860px; margin: 0 auto; padding: 16px; color: #222; }
+    nav a { margin-right: 16px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 16px; }
+    th, td { text-align: left; padding: 8px; border-bottom: 1px solid #ddd; }
+    .overdue { color: #b00020; font-weight: bold; }
+    .ok { color: #2e7d32; }
+    form { display: flex; gap: 8px; margin: 0; }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="{{ url_for('home') }}"><strong>YourTurn</strong></a>
+    <a href="{{ url_for('chores.chores_page') }}">Chores</a>
+  </nav>
+  {% block content %}{% endblock %}
+</body>
+</html>

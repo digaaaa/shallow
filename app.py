@@ -2,16 +2,18 @@
 
 import os
 
-from flask import Flask
+from flask import Flask, render_template
 
+from chores.routes import chores_bp
 from db import init_db
 
 app = Flask(__name__)
+app.register_blueprint(chores_bp)
 
 
 @app.route("/")
 def home():
-    return "YourTurn is running"
+    return render_template("index.html")
 
 
 if __name__ == "__main__":

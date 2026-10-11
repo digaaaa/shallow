@@ -33,6 +33,12 @@ def test_days_overdue(last_done, frequency_days, expected):
     assert days_overdue(last_done, frequency_days, TODAY) == expected
 
 
+# --- roommates -------------------------------------------------------------
+
+def test_roommates_are_listed_in_id_order(service):
+    assert [r["name"] for r in service.roommates()] == ["Alex", "Sam", "Jordan"]
+
+
 # --- mark_done -------------------------------------------------------------
 
 def test_mark_done_saves_a_log_entry(service, conn):
@@ -75,6 +81,7 @@ def test_overview_summarises_every_chore(service):
     dishes, bathroom = service.overview(TODAY)
 
     assert dishes["name"] == "Dishes"
+    assert dishes["next_person_id"] == 2
     assert dishes["next_person"] == "Sam"
     assert dishes["last_done"] == "2026-10-08"
     assert dishes["days_overdue"] == 2

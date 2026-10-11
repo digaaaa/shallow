@@ -20,6 +20,9 @@ class ChoreService:
     def __init__(self, repository):
         self.repo = repository
 
+    def roommates(self):
+        return self.repo.list_roommates()
+
     def mark_done(self, chore_id, roommate_id, today):
         if self.repo.get_chore(chore_id) is None:
             raise ValueError("Unknown chore")
@@ -45,11 +48,13 @@ class ChoreService:
         for chore in self.repo.list_chores():
             history = self.repo.history(chore["id"])
             last_done = history[-1]["done_on"] if history else None
+            next_id = self.next_person(chore["id"])
             summaries.append({
                 "id": chore["id"],
                 "name": chore["name"],
                 "frequency_days": chore["frequency_days"],
-                "next_person": names[self.next_person(chore["id"])],
+                "next_person_id": next_id,
+                "next_person": names[next_id],
                 "last_done": last_done,
                 "days_overdue": days_overdue(last_done, chore["frequency_days"], today),
             })
