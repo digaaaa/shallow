@@ -26,6 +26,14 @@ class ChoreRepository:
             (chore_id,),
         ).fetchall()
 
+    def count_done_since(self, start_date):
+        """How many chores each roommate did from start_date onwards."""
+        return self.conn.execute(
+            "SELECT roommate_id, COUNT(*) AS done FROM chore_log "
+            "WHERE done_on >= ? GROUP BY roommate_id",
+            (start_date,),
+        ).fetchall()
+
     def add_log(self, chore_id, roommate_id, done_on):
         self.conn.execute(
             "INSERT INTO chore_log (chore_id, roommate_id, done_on) VALUES (?, ?, ?)",

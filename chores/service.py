@@ -41,6 +41,17 @@ class ChoreService:
         history = [(row["roommate_id"], row["done_on"]) for row in self.repo.history(chore_id)]
         return rule.next_person(roommate_ids, history)
 
+    def monthly_stats(self, today):
+        """Every roommate with how many chores they did this month, most first."""
+        first_of_month = today.replace(day=1).isoformat()
+        counts = {row["roommate_id"]: row["done"] for row in self.repo.count_done_since(first_of_month)}
+        stats = []
+        for roommate in self.repo.list_roommates():
+            # .get(..., 0) gives 0 to roommates who did nothing this month.
+            stats.append({"name": roommate["name"], "done": counts.get(roommate["id"], 0)})
+        # Most chores first. Python's sort keeps the original order on a tie.
+        return sorted(stats, key=lambda s: s["done"], reverse=True)
+
     def overview(self, today):
         """One summary per chore, ready to show on the page."""
         names = {r["id"]: r["name"] for r in self.repo.list_roommates()}

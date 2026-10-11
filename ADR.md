@@ -8,6 +8,14 @@ Decision: Use Python with Flask, Jinja templates for the pages, and the standard
 Alternatives considered: Django, rejected because it brings an ORM, admin panel and project structure the app does not need, which would mean more code I did not write and must still explain. FastAPI, rejected because its main strengths (async, automatic JSON API docs) do not help an app that renders HTML pages for a single flat.
 Consequences: The app stays small and every line is mine to explain; the cost is that I write the SQL and table setup by hand instead of getting them from an ORM.
 
+## 2. Each domain owns its own rules, repository, service and routes
+Date: 2026-10-11
+Status: Decided
+Context: Chores and supplies both answer "whose turn is it?", so it is tempting to share one turns module. But they must be splittable into separate services in Assignment 2, and their rules already differ (chores care about time, supplies about money).
+Decision: Each domain is its own package (`chores/`, `supplies/`) with its own `rules.py` (Strategy classes + `factory_map`), `repository.py` (only SQL), `service.py` (logic, receives a repository) and `routes.py` (a Flask Blueprint). The only thing they share is the `roommates` table, which is the seam where they would be split.
+Alternatives considered: A shared `turns/` module used by both domains, rejected because both domains would depend on it, so changing a chore rule could break supplies and the two could not be deployed separately without copying or extracting it first.
+Consequences: Splitting later means moving one package plus its tables into a new service; the cost is some deliberate duplication (both domains have a `TakeTurns` rule).
+
 ## 3. Both domains reference one shared roommates table, and nothing else crosses between them
 Date: 2026-10-09
 Status: Decided

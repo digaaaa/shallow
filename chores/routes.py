@@ -16,11 +16,13 @@ def chores_page():
     conn = connect()
     try:
         service = ChoreService(ChoreRepository(conn))
-        chores = service.overview(date.today())
+        today = date.today()
+        chores = service.overview(today)
         roommates = service.roommates()
+        stats = service.monthly_stats(today)
     finally:
         conn.close()
-    return render_template("chores.html", chores=chores, roommates=roommates)
+    return render_template("chores.html", chores=chores, roommates=roommates, stats=stats)
 
 
 @chores_bp.route("/<int:chore_id>/done", methods=["POST"])

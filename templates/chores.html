@@ -38,4 +38,18 @@
     </tr>
     {% endfor %}
   </table>
+
+  <h2>This month</h2>
+  <table>
+    <tr>
+      <th>Roommate</th>
+      <th>Chores done</th>
+    </tr>
+    {% for row in stats %}
+    <tr>
+      <td>{{ row.name }}</td>
+      <td>{{ row.done }}</td>
+    </tr>
+    {% endfor %}
+  </table>
 {% endblock %}

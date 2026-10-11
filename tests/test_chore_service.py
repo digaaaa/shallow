@@ -73,6 +73,23 @@ def test_next_person_rejects_an_unknown_chore(service):
         service.next_person(99)
 
 
+# --- monthly_stats ---------------------------------------------------------
+
+def test_monthly_stats_counts_only_this_month_and_includes_everyone(service):
+    service.mark_done(1, 2, date(2026, 9, 30))   # last month: not counted
+    service.mark_done(1, 2, date(2026, 10, 1))   # first day of the month: counted
+    service.mark_done(2, 2, date(2026, 10, 5))
+    service.mark_done(1, 3, date(2026, 10, 9))
+
+    stats = service.monthly_stats(TODAY)
+
+    assert stats == [
+        {"name": "Sam", "done": 2},
+        {"name": "Jordan", "done": 1},
+        {"name": "Alex", "done": 0},
+    ]
+
+
 # --- overview --------------------------------------------------------------
 
 def test_overview_summarises_every_chore(service):

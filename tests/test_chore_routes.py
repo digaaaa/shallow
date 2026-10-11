@@ -23,6 +23,7 @@ def test_chores_page_lists_seeded_chores(client):
     assert response.status_code == 200
     assert b"Dishes" in response.data
     assert b"never" in response.data
+    assert b"This month" in response.data
 
 
 def test_i_did_it_logs_the_chore_and_redirects(client):
