@@ -40,8 +40,8 @@ def test_record_purchase_rejects_an_unknown_roommate(service):
         service.record_purchase(1, 99, 2.0, TODAY)
 
 
-@pytest.mark.parametrize("price", [0, -1.5])
-def test_record_purchase_rejects_a_price_that_is_not_positive(service, price):
+@pytest.mark.parametrize("price", [0, -1.5, 5000, float("nan"), float("inf")])
+def test_record_purchase_rejects_an_impossible_price(service, price):
     with pytest.raises(ValueError, match="more than 0"):
         service.record_purchase(1, 1, price, TODAY)
 

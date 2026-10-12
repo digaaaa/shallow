@@ -6,9 +6,11 @@ from flask import Flask, render_template
 
 from chores.routes import chores_bp
 from db import init_db
+from supplies.routes import supplies_bp
 
 app = Flask(__name__)
 app.register_blueprint(chores_bp)
+app.register_blueprint(supplies_bp)
 
 
 @app.route("/")

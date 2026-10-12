@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Shared supplies</h1>
+  <table>
+    <tr>
+      <th>Supply</th>
+      <th>Last bought</th>
+      <th>Next to buy</th>
+      <th>Log it</th>
+    </tr>
+    {% for supply in supplies %}
+    <tr>
+      <td>{{ supply.name }}</td>
+      <td>
+        {% if supply.last_bought %}
+          {{ supply.last_bought }} (€{{ "%.2f"|format(supply.last_price) }})
+        {% else %}
+          never
+        {% endif %}
+      </td>
+      <td>{{ supply.next_person }}</td>
+      <td>
+        <form method="post" action="{{ url_for('supplies.mark_bought', supply_id=supply.id) }}">
+          <select name="roommate_id">
+            {% for roommate in roommates %}
+              <option value="{{ roommate.id }}" {% if roommate.id == supply.next_person_id %}selected{% endif %}>
+                {{ roommate.name }}
+              </option>
+            {% endfor %}
+          </select>
+          <input type="number" name="price" min="0.01" max="1000" step="0.01" placeholder="€" required>
+          <button type="submit">I bought it</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <h2>Spent this month</h2>
+  <table>
+    <tr>
+      <th>Roommate</th>
+      <th>Total</th>
+    </tr>
+    {% for row in spending %}
+    <tr>
+      <td>{{ row.name }}</td>
+      <td>€{{ "%.2f"|format(row.spent) }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+{% endblock %}

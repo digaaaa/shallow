@@ -2,6 +2,8 @@
 
 from supplies.rules import get_rule
 
+MAX_PRICE = 1000  # euros; a single flat-supply purchase above this is a typo
+
 
 class SupplyService:
     def __init__(self, repository):
@@ -16,8 +18,10 @@ class SupplyService:
         roommate_ids = [r["id"] for r in self.repo.list_roommates()]
         if roommate_id not in roommate_ids:
             raise ValueError("Unknown roommate")
-        if price <= 0:
-            raise ValueError("Price must be more than 0")
+        # Written as "not (0 < price <= 1000)" so that odd inputs like
+        # float("nan") or float("inf") are rejected too.
+        if not (0 < price <= MAX_PRICE):
+            raise ValueError(f"Price must be more than 0 and at most {MAX_PRICE}")
         self.repo.add_purchase(supply_id, roommate_id, round(price, 2), today.isoformat())
 
     def next_person(self, supply_id):
