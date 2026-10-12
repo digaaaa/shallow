@@ -31,3 +31,11 @@ Context: The brief requires at least 70% coverage of the core business logic of 
 Decision: The "who's next" rules take plain lists (no database), so they get many small unit tests covering edge cases (nobody did it yet, wrap-around, ties, someone moved out). Services are tested against an in-memory SQLite database built from the real `SCHEMA` (a fake, not mocks), `today` is always passed in as a parameter so tests never depend on the real date, and the routes plus startup contract (`PORT`, `DATA_DIR`, seeding twice) get a few tests with Flask's test client and `monkeypatch`.
 Alternatives considered: Mocking the repository in service tests, rejected because the SQL queries (`GROUP BY`, `SUM`, date filters) are where real bugs would hide, and an in-memory database tests them for real while still being fast.
 Consequences: Coverage of `chores/`, `supplies/` and `db.py` is 100% and the suite runs in about a second; left thinner on purpose: how the HTML looks and real browser (end-to-end) tests, since they are slow and the logic underneath is already covered.
+
+## 5. Deliberately not building a third "Borrowing" domain
+Date: 2026-10-12
+Status: Decided
+Context: Flatmates also borrow each other's things ("took your boots" → "put them back"), and I planned Borrowing as an optional third domain. The brief says a third domain is only worth a small amount and should not take time away from testing and the process documents.
+Decision: Do not build Borrowing. YourTurn ships with exactly two domains, Chores and Supplies, each fully tested.
+Alternatives considered: Building Borrowing as a third blueprint with its own `borrowings` table, rejected because with a three-day schedule it would have meant thinner tests and a rushed README and ADR log, which are worth far more of the grade than an extra domain.
+Consequences: The app does less for flatmates today, but because domains share only the `roommates` table, Borrowing can be added later as a new `borrowing/` package and table that points at `roommates`, without changing chores or supplies at all.
