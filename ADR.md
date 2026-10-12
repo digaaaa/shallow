@@ -23,3 +23,11 @@ Context: Chores and supplies both need to know who the flatmates are, but in Ass
 Decision: Five tables: `roommates` is shared; `chores` + `chore_log` belong only to the chores domain and `supplies` + `purchases` only to the supplies domain. Each domain's log table points at `roommates.id`, and no chores table references a supplies table or the other way round. Dates are stored as ISO text (`YYYY-MM-DD`) and each item's "who's next" rule is stored as a text name (e.g. `take_turns`).
 Alternatives considered: One generic `turns` table holding both chore completions and purchases with a `type` column, rejected because it would mix the two domains in one table (and purchases need a price that chores don't), making them impossible to split later.
 Consequences: Splitting later only means giving each service its own copy (or API) of the roommates list; the cost is that a few queries are similar in both domains instead of shared.
+
+## 4. Test the rules as pure functions and the services against a real in-memory SQLite database
+Date: 2026-10-12
+Status: Decided
+Context: The brief requires at least 70% coverage of the core business logic of both domains, and the logic that matters most is "whose turn is next" plus overdue days and monthly totals, which all depend on dates.
+Decision: The "who's next" rules take plain lists (no database), so they get many small unit tests covering edge cases (nobody did it yet, wrap-around, ties, someone moved out). Services are tested against an in-memory SQLite database built from the real `SCHEMA` (a fake, not mocks), `today` is always passed in as a parameter so tests never depend on the real date, and the routes plus startup contract (`PORT`, `DATA_DIR`, seeding twice) get a few tests with Flask's test client and `monkeypatch`.
+Alternatives considered: Mocking the repository in service tests, rejected because the SQL queries (`GROUP BY`, `SUM`, date filters) are where real bugs would hide, and an in-memory database tests them for real while still being fast.
+Consequences: Coverage of `chores/`, `supplies/` and `db.py` is 100% and the suite runs in about a second; left thinner on purpose: how the HTML looks and real browser (end-to-end) tests, since they are slow and the logic underneath is already covered.
